@@ -11,8 +11,7 @@ void main() {
     expect(find.text('Mis tareas'), findsOneWidget);
 
     final completedTask = demoTasks.firstWhere((task) => task.isCompleted);
-    final card = find.widgetWithText(TaskCard, completedTask.title);
-
+    final card = find.widgetWithText(ListTile, completedTask.title);
     await tester.scrollUntilVisible(card, 200);
 
     expect(card, findsOneWidget);
