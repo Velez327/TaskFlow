@@ -124,3 +124,59 @@ Ejemplo del objeto JSON esperado al consultar una tarea:
 
 Task.fromJson convierte este objeto en una instancia de Task.
 Las claves y los tipos del JSON deben coincidir con el modelo.
+
+## API de tareas
+
+TaskFlow consulta tareas de prueba de JSONPlaceholder mediante Dio.
+
+### Endpoint y usuario elegido
+
+- Método HTTP: GET.
+- URL base: https://jsonplaceholder.typicode.com
+- Recurso: /todos
+- Parámetro de consulta: userId=2.
+- URL exacta: https://jsonplaceholder.typicode.com/todos?userId=2
+
+Elegí el usuario 2 para comprobar que cambiar el parámetro modifica
+las tareas obtenidas. Su identificador está definido en la constante
+userId de TaskApiService.
+
+### Campos recibidos y conversión
+
+| Campo recibido | Tipo | Propiedad en Task |
+|---|---|---|
+| userId | int | userId |
+| id | int | id |
+| title | String | title |
+| completed | bool | isCompleted |
+
+La API no entrega description ni priority. TaskFlow completa esos campos
+con los valores "Sin descripción (API)" y "Sin prioridad (API)".
+Estos textos se definen en la aplicación.
+
+### Recorrido de los datos
+
+TaskApiService consulta el endpoint mediante Dio y convierte la respuesta
+en objetos Task con Task.fromJson.
+
+RemoteTaskRepository obtiene las tareas del servicio y conserva una copia
+en memoria. TasksViewModel espera el resultado mediante Future,
+async y await, y notifica a las pantallas mediante notifyListeners.
+
+### Cambios de estado
+
+Marcar una tarea como completada o pendiente actualiza únicamente la copia
+en memoria. Esta acción no envía cambios al servidor. Al reiniciar la
+aplicación, se consultan nuevamente los estados originales de la API.
+
+Las cinco tareas propias de la sesión anterior se conservan en
+LocalTaskRepository como respaldo local.
+
+### Comprobaciones realizadas
+
+- La consulta del usuario 2 devuelve HTTP 200.
+- El listado muestra las tareas remotas y el detalle indica Usuario: 2.
+- Un cambio de estado aparece tanto en el listado como en el detalle.
+- Al reiniciar la aplicación, se recupera el estado remoto.
+- Sin internet aparece "No se pudieron cargar las tareas.".
+- Al recuperar la conexión y reiniciar, vuelve a cargarse el listado.

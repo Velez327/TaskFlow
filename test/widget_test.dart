@@ -8,6 +8,7 @@ import 'package:taskflow/features/tasks/presentation/tasks_view_model.dart';
 void main() {
   testWidgets('Completar una tarea actualiza detalle y lista', (tester) async {
     final viewModel = TasksViewModel(LocalTaskRepository());
+    await viewModel.loadTasks();
     final task = viewModel.tasks.firstWhere((task) => !task.isCompleted);
 
     appRouter.go('/');
