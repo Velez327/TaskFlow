@@ -174,9 +174,48 @@ LocalTaskRepository como respaldo local.
 
 ### Comprobaciones realizadas
 
-- La consulta del usuario 2 devuelve HTTP 200.
+- La consulta del usuario 1 devuelve HTTP 200.
 - El listado muestra las tareas remotas y el detalle indica Usuario: 2.
 - Un cambio de estado aparece tanto en el listado como en el detalle.
 - Al reiniciar la aplicación, se recupera el estado remoto.
 - Sin internet aparece "No se pudieron cargar las tareas.".
 - Al recuperar la conexión y reiniciar, vuelve a cargarse el listado.
+
+
+Se actualizó TasksViewModel para controlar las peticiones asíncronas, evitar solicitudes simultáneas y diferenciar los resultados de la API.
+
+Se modificó TaskListScreen para mostrar mensajes y acciones según el estado de la consulta.
+
+Carga: se presenta un CircularProgressIndicator mientras se obtienen las tareas.
+
+Éxito: se muestran las tareas remotas mediante tarjetas que permiten acceder al detalle.
+
+Vacío: se presenta el mensaje "Todavía no hay tareas para mostrar." y el botón Actualizar.
+
+Error: se muestra el mensaje "No se pudieron cargar las tareas." y el botón Reintentar.
+
+También se incorporó RefreshIndicator para actualizar la lista deslizando hacia abajo.
+
+Pruebas de funcionamiento
+
+Estado de éxito: se configuró userId=1 en TaskApiService y se ejecutó la aplicación con conexión a internet. La lista mostró las tareas recibidas desde JSONPlaceholder.
+
+Estado de carga: se pulsó el botón Actualizar y se observó el indicador circular durante la solicitud.
+
+Estado vacío: se modificó temporalmente userId a 9999 y se reinició la aplicación. La API devolvió una lista sin elementos y TaskFlow mostró el mensaje correspondiente junto con el botón Actualizar.
+
+Estado de error: se desactivó la conexión a internet del dispositivo y se pulsó Actualizar. La aplicación mostró el mensaje de error y el botón Reintentar.
+
+Prueba de reintento: se restableció la conexión a internet y se pulsó Reintentar. Las tareas volvieron a aparecer sin necesidad de reiniciar TaskFlow.
+
+Al finalizar las pruebas, se restauró userId=1.
+
+Resultado
+
+TaskFlow permite identificar y mostrar los cuatro estados de una petición asíncrona. Además, conserva la consulta remota, la navegación al detalle y la opción de marcar tareas como completadas localmente.
+
+La actualización de la lista vuelve a consultar la API, por lo que las modificaciones locales del estado de las tareas pueden reemplazarse por los valores remotos.
+
+Evidencias
+
+Se realizaron las pruebas correspondientes a los estados de éxito, vacío, error, reintento y carga.
