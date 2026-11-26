@@ -181,7 +181,7 @@ LocalTaskRepository como respaldo local.
 - Sin internet aparece "No se pudieron cargar las tareas.".
 - Al recuperar la conexión y reiniciar, vuelve a cargarse el listado.
 
-
+  
 Se actualizó TasksViewModel para controlar las peticiones asíncronas, evitar solicitudes simultáneas y diferenciar los resultados de la API.
 
 Se modificó TaskListScreen para mostrar mensajes y acciones según el estado de la consulta.
@@ -219,3 +219,39 @@ La actualización de la lista vuelve a consultar la API, por lo que las modifica
 Evidencias
 
 Se realizaron las pruebas correspondientes a los estados de éxito, vacío, error, reintento y carga.
+
+09: Funcionalidades implementadas
+
+Formulario con campos de título y descripción.
+
+Selector de prioridad con opciones Alta, Media y Baja.
+
+Validación del título para evitar valores vacíos o menores de tres caracteres.
+
+Selector de fecha opcional mediante showDatePicker, con opción para quitar la fecha seleccionada.
+
+Botón Guardar que valida los campos y devuelve un objeto TaskDraft.
+
+Navegación mediante la ruta /new.
+
+Botón Nueva tarea en la pantalla principal.
+
+Pruebas realizadas
+
+Título vacío: al pulsar Guardar sin ingresar un título, aparece el mensaje "Escribe un título.".
+
+Título corto: al ingresar dos caracteres, aparece el mensaje "Usa al menos 3 caracteres.".
+
+Formulario válido: al ingresar un título válido, descripción y prioridad, la aplicación regresa a la lista y muestra el mensaje "Formulario válido", acompañado del título ingresado.
+
+Cancelar: al regresar sin guardar, no aparece ningún mensaje de confirmación.
+
+Fecha opcional: se comprobó que el calendario permite seleccionar y quitar una fecha. También se verificó que el formulario puede guardarse sin seleccionar ninguna fecha.
+
+Resultado
+
+El formulario valida correctamente el título y permite preparar un borrador de tarea. La descripción no tiene una validación obligatoria y la prioridad comienza con el valor Media.
+
+La fecha seleccionada se muestra en el formulario, pero todavía no se incorpora al objeto TaskDraft.
+
+En esta sesión no se envían datos a la API ni se crean tareas remotas.
